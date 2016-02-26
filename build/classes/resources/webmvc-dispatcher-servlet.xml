@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+	
+	<cache:annotation-driven />
+	
+	<mvc:default-servlet-handler />
+	<mvc:annotation-driven />
+	
+	<context:annotation-config />
+	<context:component-scan base-package="com.flickrgallery.controller" />
+	<context:component-scan base-package="com.flickrgallery.beans" />
+	<context:component-scan base-package="com.flickrgallery.service" />
+	<context:component-scan base-package="com.flickrgallery.util" />
+	
+	<!-- Enable Property files -->
+	<context:property-placeholder
+		location="classpath:/resources/properties/app.properties"		
+		ignore-unresolvable="true" />
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:/resources/properties/app</value>
+			</list>
+		</property>
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
+	<!-- View Resolver JSTL View -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="order" value="2" />
+		<property name="prefix" value="/jsp/"/>
+		<property name="suffix" value=".jsp" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="ehcache" />
+	</bean>
+
+	<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:/resources/cache/ehcache.xml" />
+		<property name="shared" value="true" />
+	</bean>
+	
+
+</beans>
